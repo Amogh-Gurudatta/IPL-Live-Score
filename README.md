@@ -1,8 +1,8 @@
 # 🏏 IPL Live Score — Linux Desktop Extension
 
-**Live IPL scores on your desktop. Any DE. Zero dependencies.**
+**Live IPL scores on your desktop. Any DE. Zero fuss.**
 
-A collection of native widgets and scripts that stream live Indian Premier League scores directly into your Linux desktop panel — whether you use GNOME, KDE Plasma, Sway/Hyprland, i3, or XFCE.
+A collection of native widgets and scripts that stream live Indian Premier League scores directly into your Linux desktop panel — whether you use GNOME, KDE Plasma, COSMIC, Sway/Hyprland, i3, dwm, or XFCE.
 
 ---
 
@@ -12,8 +12,10 @@ A collection of native widgets and scripts that stream live Indian Premier Leagu
 |---|---|---|
 | **GNOME Shell 45–50** | Native Extension (GJS) | [`gnome-extension/`](gnome-extension/) |
 | **KDE Plasma 6** | Native Plasmoid (QML) | [`kde-plasmoid/`](kde-plasmoid/) |
+| **COSMIC** (System76) | Native Applet (Rust) | [`cosmic-applet/`](cosmic-applet/) |
 | **Waybar** (Sway/Hyprland) | Python Script → JSON | [`universal-script/`](universal-script/) |
 | **Polybar** (i3/bspwm) | Python Script → Text | [`universal-script/`](universal-script/) |
+| **dwm** | Python Script → xsetroot | [`universal-script/`](universal-script/) |
 | **XFCE Genmon** | Python Script → Text | [`universal-script/`](universal-script/) |
 
 ---
@@ -25,13 +27,13 @@ A collection of native widgets and scripts that stream live Indian Premier Leagu
 - The 🏏 emoji marks the currently batting team
 
 ### 🧠 Smart State Math
-- Cricinfo's RSS feed leaves a buggy `*` on completed matches.
-- Our engine parses the actual runs/wickets to determine the true match state.
-- A match is only classified as "live" if it has a `*` **AND** isn't mathematically over.
+- Cricinfo's RSS feed leaves a buggy `*` on completed matches
+- Our engine parses the actual runs/wickets to determine the true match state
+- A match is only classified as "live" if it has a `*` **AND** isn't mathematically over
 
 ### 🏗️ Priority Selector
 - **Live Match** → **Completed Match** → **Scheduled Match**
-- On double-header days, the truly live match always wins.
+- On double-header days, the truly live match always wins
 
 ### 📋 Categorized Dashboard
 All platforms display matches sorted into:
@@ -44,7 +46,8 @@ All platforms display matches sorted into:
 ## 🚀 Installation & Usage
 
 ### 1. GNOME Shell Extension
-The GNOME extension is a fully-fledged desktop applet featuring a smart polling engine (deep sleep modes), Libadwaita settings, and match-end notifications.
+
+The GNOME extension is the most feature-rich variant, with a smart polling engine (deep sleep modes), Libadwaita settings UI, match-end desktop notifications, and favorite-team highlighting.
 
 **Install from ZIP:**
 ```bash
@@ -59,21 +62,54 @@ ln -sf "$(pwd)/gnome-extension" ~/.local/share/gnome-shell/extensions/ipl-live-s
 gnome-extensions enable ipl-live-score@amogh
 ```
 
-### 2. KDE Plasma 6 Plasmoid
-A native QML/JS widget that uses `XMLHttpRequest`, presenting a compact panel ticker and a categorized expander popup.
+Log out and log back in (or restart GNOME Shell with `Alt+F2` → `r`) to activate.
 
-**Install via `kpackagetool6`:**
+---
+
+### 2. KDE Plasma 6 Plasmoid
+
+A native QML/JS widget with a compact panel ticker and a categorized popup.
+
+**Install:**
 ```bash
 kpackagetool6 -i kde-plasmoid/
 ```
-*(For development, you can use `kpackagetool6 -t Plasma/Applet -i kde-plasmoid/`)*
 
-Right-click your panel → **Add Widgets** → Search for "IPL Live Score" → Drag to panel.
+Then right-click your panel → **Add Widgets** → search for **"IPL Live Score"** → drag it to your panel.
 
-### 3. Waybar (Sway / Hyprland)
-Uses the zero-dependency universal Python script built specifically to output standard Waybar JSON format.
+**Uninstall:**
+```bash
+kpackagetool6 -r com.github.amogh.ipllivescore
+```
 
-**Waybar Config (`~/.config/waybar/config`):**
+---
+
+### 3. COSMIC Desktop Applet (System76)
+
+A native Rust applet built with `libcosmic` and `iced`. Displays a compact panel string that expands into a categorized popup on click.
+
+**Build and install:**
+```bash
+cd cosmic-applet/
+cargo build --release
+# Copy the binary to your PATH
+sudo cp target/release/cosmic-applet-ipl-score /usr/local/bin/
+```
+
+**Run:**
+```bash
+cosmic-applet-ipl-score
+```
+
+> **Note:** COSMIC is still in alpha. The applet API may change between releases. This applet targets the COSMIC epoch 1.0 alpha stack.
+
+---
+
+### 4. Waybar (Sway / Hyprland)
+
+Uses the zero-dependency Python script with Waybar's native JSON protocol. The tooltip shows all categorized matches.
+
+**Add to `~/.config/waybar/config`:**
 ```json
 "custom/ipl": {
     "exec": "python3 /path/to/universal-script/ipl_score.py --format waybar",
@@ -83,10 +119,13 @@ Uses the zero-dependency universal Python script built specifically to output st
 }
 ```
 
-### 4. Polybar (i3 / bspwm)
-Uses the universal script but formatted as multi-line plain text.
+---
 
-**Polybar Config (`~/.config/polybar/config.ini`):**
+### 5. Polybar (i3 / bspwm)
+
+Uses the Python script in plain text mode. Polybar reads the first line as the module output.
+
+**Add to `~/.config/polybar/config.ini`:**
 ```ini
 [module/ipl]
 type = custom/script
@@ -94,11 +133,36 @@ exec = python3 /path/to/universal-script/ipl_score.py --format text | head -1
 interval = 60
 ```
 
-### 5. XFCE Genmon
-Add a "Generic Monitor" panel item to your XFCE panel and set the command to:
+---
+
+### 6. dwm
+
+dwm's default status bar is set via `xsetroot -name`. The `--format dwm` flag outputs a clean single-line string designed for this.
+
+**Add to your `~/.xinitrc` (before the `exec dwm` line):**
+```bash
+while true; do
+    xsetroot -name "$(python3 /path/to/universal-script/ipl_score.py --format dwm)"
+    sleep 60
+done &
+```
+
+**One-liner version:**
+```bash
+while true; do xsetroot -name "$(python3 /path/to/ipl_score.py --format dwm)"; sleep 60; done &
+```
+
+---
+
+### 7. XFCE Genmon
+
+Add a **"Generic Monitor"** panel item and set the command to:
+
 ```bash
 python3 /path/to/universal-script/ipl_score.py --format text | head -1
 ```
+
+Set the refresh interval to 60 seconds.
 
 ---
 
@@ -116,21 +180,69 @@ python3 /path/to/universal-script/ipl_score.py --format text | head -1
 
 The extension fetches `http://static.cricinfo.com/rss/livescores.xml` — a tiny, static XML file that Cricinfo has served reliably for over a decade.
 
+### Smart State Math — Why It Matters
+
+Cricinfo's RSS feed has a known bug: the `*` (batting indicator) sometimes remains on matches that have already ended. A naive check would incorrectly classify these as "live". Our engine solves this:
+
+```
+has_asterisk = '*' in title
+is_finished  = Team2_runs > Team1_runs  OR  any team all out (wickets == 10)
+is_live      = has_asterisk AND NOT is_finished
+```
+
+This logic is identically implemented across all six platforms — in JavaScript (GNOME/KDE), Python (universal script), and Rust (COSMIC).
+
 ---
 
 ## 🏗️ Project Structure
 
 ```
 .
-├── gnome-extension/          # GNOME Shell 45-50 native extension (GJS)
-├── kde-plasmoid/             # KDE Plasma 6 native widget (QML)
-├── universal-script/         # Universal Waybar/Polybar/XFCE script (Python)
-└── README.md                 # Universal instructions
+├── gnome-extension/               # GNOME Shell 45-50 (GJS + Soup 3)
+│   ├── extension.js
+│   ├── metadata.json
+│   ├── prefs.js
+│   └── schemas/
+│
+├── kde-plasmoid/                  # KDE Plasma 6 (QML + JS)
+│   ├── metadata.json
+│   └── contents/ui/main.qml
+│
+├── cosmic-applet/                 # COSMIC DE (Rust + iced)
+│   ├── Cargo.toml
+│   └── src/main.rs
+│
+├── universal-script/              # Waybar / Polybar / dwm / XFCE (Python 3)
+│   └── ipl_score.py
+│
+└── README.md
 ```
 
 ---
 
-## 📄 License & Credits
+## 🖥️ Compatibility
 
-- **License**: MIT
+| Platform | Version | Status |
+|---|---|---|
+| GNOME Shell | 45–50 | ✅ Supported |
+| KDE Plasma | 6.0+ | ✅ Supported |
+| COSMIC | Epoch 1 Alpha | ✅ Supported |
+| Waybar | Any | ✅ Supported |
+| Polybar | Any | ✅ Supported |
+| dwm | Any | ✅ Supported |
+| XFCE (Genmon) | Any | ✅ Supported |
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 🙏 Credits
+
 - **Data Source**: [ESPN Cricinfo](https://www.espncricinfo.com) RSS Feed
+- **GNOME**: [gjs.guide](https://gjs.guide/extensions/)
+- **KDE**: [Plasma Developer Documentation](https://develop.kde.org/docs/plasma/)
+- **COSMIC**: [System76 COSMIC](https://github.com/pop-os/cosmic-epoch)

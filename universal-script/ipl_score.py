@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """
 IPL Live Score — Universal Bar Script
-Works with Waybar, Polybar, XFCE Genmon, and any status bar that reads stdout.
+Works with Waybar, Polybar, XFCE Genmon, dwm, and any status bar that reads stdout.
 
 Usage:
     python3 ipl_score.py --format waybar     # JSON output for Waybar
     python3 ipl_score.py --format text       # Plain text for Polybar / XFCE Genmon
+    python3 ipl_score.py --format dwm        # Single line for xsetroot -name
+
+dwm usage (add to .xinitrc):
+    while true; do xsetroot -name "$(python3 /path/to/ipl_score.py --format dwm)"; sleep 60; done &
 """
 
 import argparse
@@ -218,6 +222,16 @@ def format_text(data: dict) -> str:
     return "\n".join(lines)
 
 
+def format_dwm(data: dict) -> str:
+    """
+    Output a single line for dwm's xsetroot -name.
+    dwm has no tooltip or multiline support — just the active match.
+    """
+    if data["active_match"] is None:
+        return "🏏 IPL: No Live Matches"
+    return f"🏏 {data['active_match']}"
+
+
 # ---------------------------------------------------------------------------
 # Entry Point
 # ---------------------------------------------------------------------------
@@ -228,9 +242,9 @@ def main():
     )
     parser.add_argument(
         "--format",
-        choices=["waybar", "text"],
+        choices=["waybar", "text", "dwm"],
         default="text",
-        help="Output format: 'waybar' for Waybar JSON, 'text' for Polybar/XFCE",
+        help="Output format: 'waybar' for JSON, 'text' for Polybar/XFCE, 'dwm' for xsetroot",
     )
     args = parser.parse_args()
 
@@ -249,6 +263,8 @@ def main():
 
     if args.format == "waybar":
         print(format_waybar(data))
+    elif args.format == "dwm":
+        print(format_dwm(data))
     else:
         print(format_text(data))
 
