@@ -1,0 +1,9 @@
+{
+    "name": "IPL Live Score",
+    "description": "Displays live IPL cricket match scores in the GNOME top bar.",
+    "uuid": "ipl-live-score@amogh",
+    "version": 1,
+    "shell-version": ["45", "46", "47", "48", "49", "50"],
+    "settings-schema": "org.gnome.shell.extensions.iplscore",
+    "url": ""
+}

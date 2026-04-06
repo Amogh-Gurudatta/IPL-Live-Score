@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.iplscore" path="/org/gnome/shell/extensions/iplscore/">
+    <key name="refresh-interval" type="i">
+      <default>60</default>
+      <summary>Refresh Interval</summary>
+      <description>The polling interval in seconds to fetch live scores.</description>
+    </key>
+    <key name="favorite-team" type="s">
+      <default>'None'</default>
+      <summary>Favorite Team</summary>
+      <description>The favorite IPL team abbreviation to prioritize.</description>
+    </key>
+    <key name="notified-matches" type="as">
+      <default>[]</default>
+      <summary>Notified Matches</summary>
+      <description>Array of match IDs that have already triggered a notification.</description>
+    </key>
+
+  </schema>
+</schemalist>

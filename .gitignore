@@ -1,0 +1,20 @@
+# Compiled schema binary
+schemas/gschemas.compiled
+
+# GNOME Shell logs
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
