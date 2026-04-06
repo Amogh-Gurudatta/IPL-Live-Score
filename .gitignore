@@ -18,3 +18,9 @@ Thumbs.db
 *~
 .vscode/
 .idea/
+
+# Built extensions and compressed files
+*.zip
+*.tar.gz
+*.tar.xz
+*.tar.bz2
