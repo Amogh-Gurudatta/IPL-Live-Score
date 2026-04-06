@@ -101,7 +101,7 @@ sudo cp target/release/cosmic-applet-ipl-score /usr/local/bin/
 cosmic-applet-ipl-score
 ```
 
-> **Note:** COSMIC is still in alpha. The applet API may change between releases. This applet targets the COSMIC epoch 1.0 alpha stack.
+> **Note:** This applet targets the stable COSMIC Epoch 1 (v1.0+) stack and utilizes standard libcosmic widgets.
 
 ---
 
@@ -226,7 +226,7 @@ This logic is identically implemented across all six platforms — in JavaScript
 |---|---|---|
 | GNOME Shell | 45–50 | ✅ Supported |
 | KDE Plasma | 6.0+ | ✅ Supported |
-| COSMIC | Epoch 1 Alpha | ✅ Supported |
+| COSMIC | Epoch 1.0+ | ✅ Supported |
 | Waybar | Any | ✅ Supported |
 | Polybar | Any | ✅ Supported |
 | dwm | Any | ✅ Supported |
