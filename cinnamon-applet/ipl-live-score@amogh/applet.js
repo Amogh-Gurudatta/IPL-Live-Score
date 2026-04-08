@@ -366,7 +366,7 @@ class IplLiveScoreApplet extends Applet.TextIconApplet {
                 let description = event.description || "";
                 let matchNum = extractMatchNum(description);
                 let context = fullStatus.summary || statusDetail;
-                let link = event.link || CRICINFO_LIVE;
+                let link = (event.link || CRICINFO_LIVE).replace("www.espn.in", "www.espncricinfo.com");
 
                 let panelText = buildPanelText(competitors);
                 if (!panelText) continue;

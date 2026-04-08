@@ -310,7 +310,7 @@ PlasmoidItem {
                 var description = event.description || "";
                 var matchNum = extractMatchNum(description);
                 var context = fullStatus.summary || statusDetail;
-                var link = event.link || root.cricinfoLive;
+                var link = (event.link || root.cricinfoLive).replace("www.espn.in", "www.espncricinfo.com");
 
                 var panelText = buildPanelText(competitors);
                 if (!panelText) continue;

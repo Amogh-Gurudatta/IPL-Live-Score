@@ -173,7 +173,7 @@ fn fetch_and_parse() -> Option<FeedData> {
             let link = event["link"]
                 .as_str()
                 .unwrap_or(CRICINFO_LIVE)
-                .to_string();
+                .replace("www.espn.in", "www.espncricinfo.com");
 
             let panel_text = match build_panel_text(competitors) {
                 Some(t) => t,

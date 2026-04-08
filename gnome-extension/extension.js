@@ -406,7 +406,7 @@ export default class IplLiveScoreExtension extends Extension {
                 const description = event?.description || '';
                 const matchNum = this._extractMatchNum(description);
                 const context = fullStatus?.summary || statusDetail;
-                const link = event?.link || CRICINFO_LIVE;
+                const link = (event?.link || CRICINFO_LIVE).replace('www.espn.in', 'www.espncricinfo.com');
 
                 const panelText = this._buildPanelText(competitors);
                 if (!panelText) continue;

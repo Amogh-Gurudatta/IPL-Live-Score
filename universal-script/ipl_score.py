@@ -138,7 +138,7 @@ def fetch_and_parse():
             description = event.get("description", "")
             match_num = _extract_match_num(description)
             context = full_status.get("summary", status_detail)
-            link = event.get("link", CRICINFO_LIVE)
+            link = event.get("link", CRICINFO_LIVE).replace("www.espn.in", "www.espncricinfo.com")
 
             # Panel text (short)
             panel_text = _build_panel_text(competitors)
