@@ -12,7 +12,7 @@
         ],
         "Category": "Online Services",
         "License": "MIT",
-        "Version": "1.0.0",
+        "Version": "3.0.0",
         "Website": "https://github.com/amogh-kalalbandi/ipl-live-score-gnome-extension"
     },
     "KPackageStructure": "Plasma/Applet",
